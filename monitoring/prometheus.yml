@@ -17,7 +17,7 @@ scrape_configs:
     bearer_token_file: /etc/prometheus/k8s_token
     kubernetes_sd_configs:
       - role: pod
-        api_server: https://BAA039AE86BFFEDD48329BB099682484.gr7.ap-south-1.eks.amazonaws.com
+        api_server: https://4C15D41ED104B6D41931EFDB35DE4690.gr7.ap-south-1.eks.amazonaws.com
         tls_config:
           insecure_skip_verify: true
         bearer_token_file: /etc/prometheus/k8s_token
