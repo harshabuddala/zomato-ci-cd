@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        // REPLACE THIS WITH YOUR ECR REPO URI (e.g. 123456789012.dkr.ecr.ap-south-1.amazonaws.com/bookmyshow-app)
+        // REPLACE THIS WITH YOUR ECR REPO URI {(e.g. 123456789012.dkr.ecr.ap-south-1.amazonaws.com/bookmyshow-app)}
         ECR_REPO_URI = '460474850557.dkr.ecr.ap-south-1.amazonaws.com/zomato'
         AWS_REGION = 'ap-south-1' 
         IMAGE_TAG = "${env.BUILD_NUMBER}"
