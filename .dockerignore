@@ -1,0 +1,8 @@
+app/node_modules
+app/build
+.git
+.gitignore
+Dockerfile
+jenkinsfile
+*.md
+*.txt

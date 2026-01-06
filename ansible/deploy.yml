@@ -1,0 +1,39 @@
+---
+- name: Deploy to EKS
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    # these will be passed from Jenkins
+    # env: "dev" or "prod"
+    # image_tag: "build-123"
+    # ecr_repo: "..."
+  tasks:
+    - name: Create namespace if not exists
+      command: kubectl create namespace {{ env }}
+      register: namespace_create
+      failed_when: namespace_create.rc != 0 and "AlreadyExists" not in namespace_create.stderr
+      ignore_errors: true
+
+    - name: Update deployment file with dynamic image tag and apply
+      shell: |
+        # Use playbook_dir to find files relative to the ansible/ folder
+        # playbook_dir is .../ansible, so we go up one level to find kubernetes
+        K8S_DIR="{{ playbook_dir }}/../kubernetes"
+        
+        # Create a temporary file
+        cp ${K8S_DIR}/deployment.yml ${K8S_DIR}/deployment_temp.yml
+        
+        # Replace the placeholders
+        sed -i 's|REPLACE_WITH_ECR_URI:REPLACE_WITH_IMAGE_TAG|{{ ecr_repo }}:{{ image_tag }}|g' ${K8S_DIR}/deployment_temp.yml
+        
+        # Apply the deployment
+        kubectl apply -f ${K8S_DIR}/deployment_temp.yml -n {{ env }}
+        
+        # Apply the service
+        kubectl apply -f ${K8S_DIR}/service.yml -n {{ env }}
+        
+        # Clean up
+        rm ${K8S_DIR}/deployment_temp.yml
+      args:
+        executable: /bin/bash

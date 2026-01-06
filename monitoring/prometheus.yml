@@ -1,0 +1,43 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'jenkins-server'
+    static_configs:
+      - targets: ['node-exporter:9100']
+
+  - job_name: 'kubernetes-pods'
+    scheme: https
+    tls_config:
+      insecure_skip_verify: true
+    bearer_token_file: /etc/prometheus/k8s_token
+    kubernetes_sd_configs:
+      - role: pod
+        api_server: https://BAA039AE86BFFEDD48329BB099682484.gr7.ap-south-1.eks.amazonaws.com
+        tls_config:
+          insecure_skip_verify: true
+        bearer_token_file: /etc/prometheus/k8s_token
+    relabel_configs:
+      # 1. Filter: Only scrape pods in the 'dev' namespace
+      - source_labels: [__meta_kubernetes_namespace]
+        action: keep
+        regex: dev
+      
+      # 2. Proxy: Rewrite address to use K8s API Server Proxy (fixes connection timeout)
+      - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_pod_name, __meta_kubernetes_pod_container_port_number]
+        action: replace
+        target_label: __metrics_path__
+        regex: (.+);(.+);(.+)
+        replacement: /api/v1/namespaces/${1}/pods/${2}:${3}/proxy/metrics
+      
+      - action: labelmap
+        regex: __meta_kubernetes_pod_label_(.+)
+      
+      - target_label: __address__
+        replacement: BAA039AE86BFFEDD48329BB099682484.gr7.ap-south-1.eks.amazonaws.com
+
+
