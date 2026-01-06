@@ -38,11 +38,11 @@ const Header = () => {
         <h3>Discover the best food & drinks in Patna</h3>
         <div className="input">
           <select name="" id="">
-            <option value="Chennai">Hyderabad</option>
-            <option value="Jaipur">Jaipur</option>
-            <option value="Delhi">Delhi</option>
-            <option value="Mumbai">Mumbai</option>
-            <option value="Kolkata">Kolkata</option>
+            <option value="Hyderabad">Hyderabad</option>
+            <option value="Banglore">Banglore</option>
+            <option value="Raipur">Raipur</option>
+            <option value="Vizag">Vizag</option>
+            <option value="Pune">Pune</option>
           </select>
           |
           <input
