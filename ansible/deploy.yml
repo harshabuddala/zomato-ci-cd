@@ -19,21 +19,21 @@
       shell: |
         # Use playbook_dir to find files relative to the ansible/ folder
         # playbook_dir is .../ansible, so we go up one level to find kubernetes
-        K8S_DIR="{{ playbook_dir }}/../kubernetes"
+        K8S_DIR="{{ playbook_dir }}/../Kubernetes"
         
         # Create a temporary file
-        cp ${K8S_DIR}/deployment.yml ${K8S_DIR}/deployment_temp.yml
+        cp ${K8S_DIR}/deployment.yaml ${K8S_DIR}/deployment_temp.yaml
         
         # Replace the placeholders
-        sed -i 's|REPLACE_WITH_ECR_URI:REPLACE_WITH_IMAGE_TAG|{{ ecr_repo }}:{{ image_tag }}|g' ${K8S_DIR}/deployment_temp.yml
+        sed -i 's|REPLACE_WITH_ECR_URI:REPLACE_WITH_IMAGE_TAG|{{ ecr_repo }}:{{ image_tag }}|g' ${K8S_DIR}/deployment_temp.yaml
         
         # Apply the deployment
-        kubectl apply -f ${K8S_DIR}/deployment_temp.yml -n {{ env }}
+        kubectl apply -f ${K8S_DIR}/deployment_temp.yaml -n {{ env }}
         
         # Apply the service
-        kubectl apply -f ${K8S_DIR}/service.yml -n {{ env }}
+        kubectl apply -f ${K8S_DIR}/service.yaml -n {{ env }}
         
         # Clean up
-        rm ${K8S_DIR}/deployment_temp.yml
+        rm ${K8S_DIR}/deployment_temp.yaml
       args:
         executable: /bin/bash
